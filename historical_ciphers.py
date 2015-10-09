@@ -301,9 +301,8 @@ class Affine(Cipher):
     def hack(self):
         ''' Runs through all possible encrypt(key) possibilities; prints results.'''
         print('Attempting to hack Affine cipher. ')
-        if len(self.ciphertext) < 1:
-            raise AttributeError('There is no ciphertext. ')
-        else:
+        while self.ciphertext:
+            possible_match = False
             for key in range(len(self.CHARS) ** 2):
                 key_check = self.split_key(key)
                 # Insert progress if cond. here that prints a percentage complete as
@@ -314,13 +313,13 @@ class Affine(Cipher):
                 if is_language(attempt, english_dict):
                     possible_match = True
                     print('Possible match with key {}:\n{}'.format(key, attempt[:140]))
-            if not possible_match: print('Unable to find possible match.')
+            if not possible_match:
+                print('Unable to find possible match.')
+                break
+        else: print('There is no ciphertext.')
+
 
 # The main loop
 if __name__ == '__main__':
     print('This library currently encrypts, decrypts, and hacks Caesar, Transposition, and Affine ciphers. ')
     english_dict = load_dictionary()
-
-
-
-
