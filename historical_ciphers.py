@@ -250,14 +250,13 @@ class Affine(Cipher):
         ''' Generates key for the affine cipher.'''
         while True:
             mult_key = random.randint(2, len(self.CHARS))
-            add_key = random.randint(1, len(self.CHARS))
+            add_key = random.randint(1, len(self.CHARS) - 1)
             if gcd(mult_key, len(self.CHARS)) == 1:
                 return mult_key * len(self.CHARS) + add_key
 
     def split_key(self, key):
         ''' Splits single key into one multiplication and one additive int.'''
-        mult_key, add_key = divmod(key, len(self.CHARS))
-        return (mult_key, add_key)
+        return divmod(key, len(self.CHARS))
 
     def encrypt(self, plaintext = None, passed_key = None):
         ''' Encrypts message attribute for Affine cipher; defaults
