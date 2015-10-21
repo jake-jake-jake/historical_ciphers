@@ -171,13 +171,10 @@ class Caesar(Cipher):
             if not possible_match: print('Unable to find possible match.')
 
 class Transposition(Cipher):
-    ''' Carries encryption and decryption methods for Transposition cipher.
-    '''
-
+    ''' Carries encryption and decryption methods for Transposition cipher. '''
     def encrypt(self, plaintext = None, passed_key = None):
         ''' Encrypts message attribute for transposition cipher; defaults
-            to self.key if None passed.
-        '''
+            to self.key if None passed. '''
         key = passed_key or self.key
         message = plaintext or self.message
         while key < (len(message)/2):
@@ -193,8 +190,7 @@ class Transposition(Cipher):
 
     def decrypt(self, ciphertext = None, passed_key = None):
         ''' Decrypts ciphertext attribute for Transposition cipher; defaults
-            to self.key if None passed.
-        '''
+            to self.key if None passed. '''
         key = passed_key or self.key
         ciphertext = ciphertext or self.ciphertext
         while key:
@@ -217,8 +213,7 @@ class Transposition(Cipher):
             print('Cannot decrypt without key. Set key or use .hack().')
 
     def hack(self):
-        ''' Runs through all possible encrypt(key) possibilities; prints results.
-        '''
+        ''' Runs through all possible encrypt(key) possibilities; prints results. '''
         if len(self.ciphertext) < 1:
             raise AttributeError('There is no ciphertext. ')
         else:
@@ -231,12 +226,11 @@ class Transposition(Cipher):
 
 class Affine(Cipher):
     ''' Carries encryption and decryption methods for Affine ciphers, as well as
-        a key generator and checker.
-    '''
+        a key generator and checker. '''
     CHARS = string.printable    # Using ASCII
     
     def get_key(self):
-        ''' Checks if a key is present. If not, caslls gen_key() and sets self.key equal to result.
+        ''' Checks if a key is present. If not, calls gen_key() and sets self.key equal to result.
             If so, asks for confirmation first.'''
         if self.key:
             print('Key already present: {}. Overwrite? Y/n'.format(self.key))
@@ -318,6 +312,26 @@ class Affine(Cipher):
         else: print('There is no ciphertext.')
 
 
+class Substitution(Cipher):
+    ''' Contains encrypt, decrypt, and key gen methods for the Substitution cipher.
+        Can work as a poor man's (that is, insecure) one-time pad. There is no hack
+        method for this Cipher class, since hack methods will be indeterminate. '''
+    CHARS = string.printable        # Using ASCII
+
+    def gen_key(self):
+        ''' Returns a key as string equal to the character set (self.CHARS) of the
+            cipher. '''
+        key_popper = list(self.CHARS)
+        key_array = [key_popper.pop(random.randint(0, len(key_popper) - 1)), \
+                     for _ in range(len(self.CHARS))]
+        return ''.join(key_array)
+        
+    def encrypt(self, plaintext = None, passed_key = None):
+        pass
+
+    def decrypt(self, ciphertext = None, passed_key = None):
+        pass
+    
 # The main loop
 if __name__ == '__main__':
     print('This library currently encrypts, decrypts, and hacks Caesar, Transposition, and Affine ciphers. ')
