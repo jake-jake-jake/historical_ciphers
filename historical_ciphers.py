@@ -112,7 +112,6 @@ class Caesar(Cipher):
         for historical flavor. Extended Latin character set ignored. A function
         to reduce diacritically marked characters to vanilla A to Z would be useful.
     '''
-    
     LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' # Letterspace for Caesar Ciphers
                                            # To make this work with extended latin
                                            # may take some doing
@@ -124,12 +123,12 @@ class Caesar(Cipher):
         while key:
             message = []
             for char in ciphertext.upper():
-                if char in Caesar.LETTERS:
-                    index = Caesar.LETTERS.find(char)
+                if char in self.LETTERS:
+                    index = self.LETTERS.find(char)
                     index -= key
-                    if index >= len(Caesar.LETTERS) or index < 0:
-                        index = abs(index % len(Caesar.LETTERS))
-                    message.append(Caesar.LETTERS[index])
+                    if index >= len(self.LETTERS) or index < 0:
+                        index = abs(index % len(self.LETTERS))
+                    message.append(self.LETTERS[index])
                 else:
                     message.append(char)
             return ''.join(message)
@@ -144,12 +143,12 @@ class Caesar(Cipher):
         while key:
             ciphertext = []
             for char in message.upper():
-                if char in Caesar.LETTERS:
-                    index = Caesar.LETTERS.find(char)
+                if char in self.LETTERS:
+                    index = self.LETTERS.find(char)
                     index += key
-                    if index >= len(Caesar.LETTERS):
-                        index = index % len(Caesar.LETTERS)
-                    ciphertext.append(Caesar.LETTERS[index])
+                    if index >= len(self.LETTERS):
+                        index = index % len(self.LETTERS)
+                    ciphertext.append(self.LETTERS[index])
                 else:
                     ciphertext.append(char)
             return ''.join(ciphertext)
@@ -322,17 +321,43 @@ class Substitution(Cipher):
         ''' Returns a key as string equal to the character set (self.CHARS) of the
             cipher. '''
         key_popper = list(self.CHARS)
-        key_array = [key_popper.pop(random.randint(0, len(key_popper) - 1)), \
+        key_array = [key_popper.pop(random.randint(0, len(key_popper) - 1)) \
                      for _ in range(len(self.CHARS))]
         return ''.join(key_array)
         
     def encrypt(self, plaintext = None, passed_key = None):
-        pass
+        ''' Encrypts using key. If no key set, raises AttributeError. '''
+        plaintext = plaintext or self.message
+        key = passed_key or self.key
+        while key:
+            ciphertext = []
+            for char in plaintext:
+                if char in self.CHARS:
+                    ciphertext.append(key[self.CHARS.find(char)])
+                else:
+                    ciphertext.append(char)
+            return ''.join(ciphertext)
+        else:
+            raise AttributeError('Cannot encrypt without key. Use gen_key method to generate key. ')
 
     def decrypt(self, ciphertext = None, passed_key = None):
-        pass
+        ''' Encrypts using key. If no key set, raises AttributeError. '''
+        ciphertext = ciphertext or self.ciphertext
+        key = passed_key or self.key
+        while key:
+            plaintext = []
+            for char in ciphertext:
+                if char in self.CHARS:
+                    plaintext.append(self.CHARS[key.find(char)])
+                else:
+                    plaintext.append(char)
+            return ''.join(plaintext)
+        else:
+            raise AttributeError('Cannot decripty without key. Use gen_key method to generate key. ')
+
     
 # The main loop
 if __name__ == '__main__':
-    print('This library currently encrypts, decrypts, and hacks Caesar, Transposition, and Affine ciphers. ')
+    print('''This library currently encrypts, decrypts, and hacks
+             Caesar, Transposition, and Affine ciphers. ''')
     english_dict = load_dictionary()
