@@ -26,11 +26,14 @@ class DefaultTests(unittest.TestCase):
         transposition_test = Transposition(test_message, key = 8)
         self.assertEqual(transposition_test.decrypt(), test_message)
 
-    def test_Affine_key_8(self): 
+    def test_Affine_key_3399(self): 
         affine_test = Affine(test_message, key = 3399)
         self.assertEqual(affine_test.decrypt(), test_message)
-
-
+    
+    def test_Substitution_set_key(self):
+        set_key = '''D}>lsNKW@\t=\'z*LGE&wqJv6!(F{a2_~[y,C0h\x0brITXpnV-ZSeM#`8gf"1Qxm<;%B$R\n/9Pkt34A|dH:ou)^\x0cU\\Oi7 +.cbj5\rY]?'''
+        substitution_test = Substitution(test_message, key = set_key)
+        self.assertEqual(substitution_test.decrypt(), test_message)
 
 class Caesar_cipher_range_keys(unittest.TestCase):
     ''' Test the Caesar cipher with keys in range of len(LETTERS) attribute. '''
@@ -42,7 +45,6 @@ class Caesar_cipher_range_keys(unittest.TestCase):
             caesar_test = Caesar(test_message, key = test_key)
             self.assertEqual(caesar_test.decrypt(), test_message.upper()) # Check vs. UPPERCASE test_message.
 
-
 class Caesar_cipher_rand_keys(unittest.TestCase):
     ''' Test the Caesar cipher with random keys. '''
     def test_Caesar_rand_keys(self):
@@ -53,8 +55,6 @@ class Caesar_cipher_rand_keys(unittest.TestCase):
             test_key = random.randint(1, 1000)
             caesar_test = Caesar(test_message, key = test_key)
             self.assertEqual(caesar_test.decrypt(), test_message.upper()) # Check vs. UPPERCASE test_message.
-
-
 
 class Transposition_cipher_range_keys(unittest.TestCase):
     ''' Test the Transposition cipher with keys in range of len(test_message) test variable. '''
@@ -77,9 +77,14 @@ class Affine_cipher_rand_test(unittest.TestCase):
             affine_test.ciphertext = affine_test.encrypt()
             self.assertEqual(affine_test.decrypt(), 'Test the Affine cipher with 1000 random keys.')
 
+class Substitution_cipher_rand_test(unittest.TestCase):
+    ''' Test the Substitution cipher with 1000 random keys. '''
+    def test_Substitution_rand_keys(self):
+        for _ in range(1000):
+            substitution_test = Substitution(test_message)
+            substitution_test.key = substitution_test.gen_key()
+            substitution_test.ciphertext = substitution_test.encrypt()
+            self.assertEqual(substitution_test.decrypt(), test_message)
 
 if __name__ == '__main__':
     unittest.main()
-
-
-
