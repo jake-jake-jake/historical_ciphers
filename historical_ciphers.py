@@ -226,7 +226,7 @@ class Transposition(Cipher):
 class Affine(Cipher):
     ''' Carries encryption and decryption methods for Affine ciphers, as well as
         a key generator and checker. '''
-    CHARS = string.printable    # Using ASCII
+    CHARS = string.printable
     
     def get_key(self):
         ''' Checks if a key is present. If not, calls gen_key() and sets self.key equal to result.
@@ -315,7 +315,7 @@ class Substitution(Cipher):
     ''' Contains encrypt, decrypt, and key gen methods for the Substitution cipher.
         Can work as a poor man's (that is, insecure) one-time pad. There is no hack
         method for this Cipher class, since hack methods will be indeterminate. '''
-    CHARS = string.printable        # Using ASCII
+    CHARS = string.printable
 
     def gen_key(self):
         ''' Returns a key as string equal to the character set (self.CHARS) of the
@@ -354,7 +354,34 @@ class Substitution(Cipher):
             return ''.join(plaintext)
         else:
             raise AttributeError('Cannot decripty without key. Use gen_key method to generate key. ')
+            
+class Vegenere(Cipher):
+    ''' Contains encrypt and decrypt methods for the Vegenère cipher. '''
+    self.CHARS = string.printable
+    
+    def encrypt(self, pt):
+        ''' Returns ciphertext from plaintext parameter, using instance key and CHAR attributes.'''
+        ct, abc, key = [], self.CHARS, self.key
+        if not key:
+            raise AttributeError('You must have key to encrypt')
+        cm = zip(pt, cycle(key))
+        for char, key_char in cm:
+            if char in abc:
+                ct.append(abc[(abc.find(char) + abc.find(key_char)) % len(abc)])
+            else:
+                ct.append(char)
+        return ''.join(ct)
 
+    def decrypt(self, ct):
+        ''' Returns plaintext from ciphertext parameter, using instance key and CHAR attributes.'''
+        pt, abc, key = [], self.abc, self.key
+        cm = zip(ct.decode, cycle(key))
+        for char, key_char in cm:
+            if char in abc:
+                pt.append(abc[(abc.find(char) - abc.find(key_char)) % len(abc)])
+            else:
+                pt.append(char)
+        return ''.join(pt)
     
 # The main loop
 if __name__ == '__main__':
