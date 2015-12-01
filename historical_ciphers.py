@@ -84,7 +84,7 @@ def get_dictionary_percentage(string, dictionary):
 # This behavior is inherited by all Cipher subclasses.
 class Cipher:
     ''' Creates class with standard cipher attributes: message,
-        ciphtertext, and key. Used to initialize all other cipher
+        ciphertext, and key. Used to initialize all other cipher
         classes.
     '''
     def __init__(self, message = '', ciphertext = '', key = None):
@@ -359,12 +359,14 @@ class Vegenere(Cipher):
     ''' Contains encrypt and decrypt methods for the Vegenère cipher. '''
     self.CHARS = string.printable
     
-    def encrypt(self, pt):
+    def encrypt(self, plaintext = None, passed_key = None):
         ''' Returns ciphertext from plaintext parameter, using instance key and CHAR attributes.'''
-        ct, abc, key = [], self.CHARS, self.key
+        ct, abc = [], self.CHARS    # ciphertext and alphabet
+        key = passed_key or self.key
+        plaintext = plaintext or self.key
         if not key:
-            raise AttributeError('You must have key to encrypt')
-        cm = zip(pt, cycle(key))
+            raise AttributeError('Key needed to encrypt.')
+        cm = zip(plaintext, cycle(key))   # ciphermatrix
         for char, key_char in cm:
             if char in abc:
                 ct.append(abc[(abc.find(char) + abc.find(key_char)) % len(abc)])
@@ -372,10 +374,14 @@ class Vegenere(Cipher):
                 ct.append(char)
         return ''.join(ct)
 
-    def decrypt(self, ct):
+    def decrypt(self, ciphertext = None, passed_key = None):
         ''' Returns plaintext from ciphertext parameter, using instance key and CHAR attributes.'''
-        pt, abc, key = [], self.abc, self.key
-        cm = zip(ct.decode, cycle(key))
+        pt, abc = [], self.CHARS   # plaintext and alphabet
+        key = passed_key or self.key
+        ciphertext = ciphertext or self.ciphertext
+        if not key:
+            raise AttributeError('Key needed to decrypt.')
+        cm = zip(ciphertext, cycle(key))
         for char, key_char in cm:
             if char in abc:
                 pt.append(abc[(abc.find(char) - abc.find(key_char)) % len(abc)])
@@ -386,5 +392,7 @@ class Vegenere(Cipher):
 # The main loop
 if __name__ == '__main__':
     print('''This library currently encrypts, decrypts, and hacks
-             Caesar, Transposition, and Affine ciphers. ''')
+             Caesar, Transposition, and Affine ciphers. Encryption
+             and decryption methods are available for Substitution
+             and Vegenère (Vegenere) ciphers.''')
     english_dict = load_dictionary()
