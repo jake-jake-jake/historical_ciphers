@@ -363,7 +363,7 @@ class Vegenere(Cipher):
         ''' Returns ciphertext from plaintext parameter, using instance key and CHAR attributes.'''
         ct, abc = [], self.CHARS    # ciphertext and alphabet
         key = passed_key or self.key
-        plaintext = plaintext or self.key
+        plaintext = plaintext or self.message
         if not key:
             raise AttributeError('Key needed to encrypt.')
         cm = zip(plaintext, cycle(key))   # ciphermatrix
