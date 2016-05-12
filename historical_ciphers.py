@@ -352,10 +352,11 @@ class Substitution(Cipher):
             return ''.join(plaintext)
         else:
             raise AttributeError('Cannot decripty without key. Use gen_key method to generate key. ')
-            
+
+
 class Vegenere(Cipher):
     ''' Contains encrypt and decrypt methods for the Vegenère cipher. '''
-    self.CHARS = string.printable
+    CHARS = string.printable
     
     def encrypt(self, plaintext = None, passed_key = None):
         ''' Returns ciphertext from plaintext parameter, using instance key and CHAR attributes.'''
