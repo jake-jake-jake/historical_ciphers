@@ -1,12 +1,10 @@
 # Classes for historical, insecure ciphers. Have fun.
 # IRGYYKY LUX NOYZUXOIGR, OTYKIAXK IOVNKXY. NGBK LAT.
 
-# Inspired by Hacking Secret Ciphers with Python: http://inventwithpython.com/hacking
-
 import math, string, random
 
 # Functions for multiplicative/Affine cipher.
-# Calculates greatest common denominator; uses Euclid's algorithm. In Python 3.5
+# Calculates greatest common denominator; uses Euclid's algorithm. In 3.5
 # this would be redundant, since .gcd() is a math method, and math is imported.
 def gcd(a, b):
     ''' Return greatest common denominator.'''
@@ -14,8 +12,8 @@ def gcd(a, b):
         a, b = b % a, a
     return b
 
+
 # Calculates modular inverse of two numbers; uses Euclid's extended algorithm.
-# 
 def mod_inverse(a, m):
     ''' Return modular inverse of two ints.'''
     if gcd(a, m) != 1:
@@ -28,53 +26,47 @@ def mod_inverse(a, m):
     return u1 % m
 
 
-
-# Loads a dictionary to check cipher hacks against. In the main() function, defaults to
-# loading the dictionary.txt provided with Hacking Ciphers with Python
-def load_dictionary(file_name = None):
-    ''' Loads a dictionary file. Defaults to 'dictionary.txt' provided by Al 
-        Sweigart in his python hacking book. 
-    '''
+def load_dictionary(file_name=None):
+    ''' Return a set of uppercase words from file, splitting on \\n.'''
     dict_name = file_name or 'dictionary.txt'
-    dict_words = {}
-    with open(dict_name) as fo:      # Loads dictionary file
+    dict_words = set()
+    with open(dict_name) as fo:
         for word in fo.read().split('\n'):
-            dict_words[word] = None
+            dict_words.add(word.upper())
     return dict_words
 
 
-
-# The following four functions are used to clean an input to see if it is English.
-# Eventually I will replace with polyglot integration to expand language functionality.
-def is_language(string, dictionary, word_percentage = 20, letter_percentage = 85):
-    ''' Checks if string is a language by comparing words in string with
-        loaded dictionary. Returns true if given percentage of word matches 
-        and letters in string is high enough. Default values: word_percentage
-        is 20 and letter_percentage is 85.
-    '''
-    word_match = (get_dictionary_percentage(string, dictionary) * 100) >= word_percentage
-    sufficient_letters = (len(strip_string(string))/len(string) * 100) >= letter_percentage
+# The following four functions clean an input and check if it is English.
+def is_language(s, dictionary, word_percent=20, letter_percent=85):
+    ''' Checks if s is a language by comparing words in s with
+        loaded dictionary. Returns true if given percentage of word matches
+        and letters in s is high enough. Default values: word_percent
+        is 20 and letter_percent is 85. '''
+    word_match = (words_in_dict(s, dictionary) * 100) >= word_percent
+    sufficient_letters = (len(strip_str(s)) / len(s) * 100) >= letter_percent
     return word_match and sufficient_letters
 
-def strip_string(string):
-    ''' Removes nonalphabetic characters from string, preserving spaces.
-    '''
-    stripped_string = [char for char in string if char.isalpha() or char in ' \t\n']
+
+def strip_str(string):
+    ''' Removes nonalphabetic characters from string, preserving spaces. '''
+    stripped_string = [char for char in string
+                       if char.isalpha() or char in ' \t\n']
     return ''.join(stripped_string)
 
-def get_dictionary_percentage(string, dictionary):
-    ''' Returns a float conveying percentage of dictionary words in 
-        string, from 0.0 to 1.0.
-    '''
-    word_list = strip_string(string).split()
-    if word_list == []:
-        return 0.0
+
+def words_in_dict(string, dictionary):
+    ''' Returns a float conveying percentage of dictionary words in
+        string, from 0.0 to 1.0. '''
+    word_list = strip_str(string).split()
+
+    if not word_list:
+        return 0
 
     dictionary_words = 0
     for word in word_list:
         if word.upper() in dictionary:
             dictionary_words += 1
-    return float(dictionary_words/len(word_list))
+    return dictionary_words / len(word_list)
 
 
 
