@@ -69,7 +69,6 @@ def words_in_dict(string, dictionary):
     return dictionary_words / len(word_list)
 
 
-
 # Cipher classes follow. The base Cipher class initializes a message,
 # ciphertext, and key. If the key is known, it automatically produces
 # a ciphertext or plaintext from .encrypt()/.decrypt() class methods.
@@ -77,89 +76,96 @@ def words_in_dict(string, dictionary):
 class Cipher:
     ''' Creates class with standard cipher attributes: message,
         ciphertext, and key. Used to initialize all other cipher
-        classes.
-    '''
-    def __init__(self, message = '', ciphertext = '', key = None):
+        classes. '''
+    def __init__(self, message='', ciphertext='', key=None):
         '''Defaults to empty values.'''
         self.message = message
         self.ciphertext = ciphertext
         self.key = key
         # Autopopulate message or ciphertext if either and key present.
         if self.message and self.key:
-            self.ciphertext = self.encrypt(passed_key = self.key)
+            self.ciphertext = self.encrypt(passed_key=self.key)
         elif self.ciphertext and self.key:
-            self.message = self.decrypt(passed_key = self.key)
+            self.message = self.decrypt(passed_key=self.key)
 
-    def decrypt(self, ciphertext = None, passed_key = None):
+    def decrypt(self, ciphertext=None, passed_key=None):
         ''' This is a placeholder method. It returns None. '''
         return None
 
-    def encrypt(self, plaintext = None, passed_key = None):
+    def encrypt(self, plaintext=None, passed_key=None):
         ''' This is a placeholder method. It returns None. '''
         return None
+
 
 class Caesar(Cipher):
     ''' Carries encryption and decryption methods for Caesar ciphers.
         The character set is limited to unadorned Latin. All letters majuscule
         for historical flavor. Extended Latin character set ignored. A function
-        to reduce diacritically marked characters to vanilla A to Z would be useful.
-    '''
-    LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' # Letterspace for Caesar Ciphers
-                                           # To make this work with extended latin
-                                           # may take some doing
+        to reduce diacritically marked characters to vanilla A to Z would
+        be useful. '''
+    LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-    def decrypt(self, ciphertext = None, passed_key = None):
-        ''' Decrypts ciphertext; defaults to self.key and self.ciphertext if neither is passed.'''
+    def decrypt(self, ciphertext=None, passed_key=None):
+        ''' Decrypts ciphertext. 
+        Defaults to key and ciphertext attributes if neither is passed.'''
+        
         key = passed_key or self.key
         ciphertext = ciphertext or self.ciphertext
-        while key:
-            message = []
-            for char in ciphertext.upper():
-                if char in self.LETTERS:
-                    index = self.LETTERS.find(char)
-                    index -= key
-                    if index >= len(self.LETTERS) or index < 0:
-                        index = abs(index % len(self.LETTERS))
-                    message.append(self.LETTERS[index])
-                else:
-                    message.append(char)
-            return ''.join(message)
-        else:
+        if key is None:
             print('Cannot decrypt without key. Set key or use .hack().')
+            return None
 
+        message = []
+        for char in ciphertext.upper():
+            if char in self.LETTERS:
+                index = self.LETTERS.find(char)
+                index -= key
+                if index >= len(self.LETTERS) or index < 0:
+                    index = abs(index % len(self.LETTERS))
+                message.append(self.LETTERS[index])
+            else:
+                message.append(char)
+        return ''.join(message)
 
-    def encrypt(self, plaintext = None, passed_key = None):
-        ''' Encrypts ciphertext; defaults to self.key and self.message if neither is passed.'''
+    def encrypt(self, plaintext=None, passed_key=None):
+        ''' Encrypts ciphertext.
+        Defaults to key and message attributes if neither is passed.'''
+
         key = passed_key or self.key
         message = plaintext or self.message
-        while key:
-            ciphertext = []
-            for char in message.upper():
-                if char in self.LETTERS:
-                    index = self.LETTERS.find(char)
-                    index += key
-                    if index >= len(self.LETTERS):
-                        index = index % len(self.LETTERS)
-                    ciphertext.append(self.LETTERS[index])
-                else:
-                    ciphertext.append(char)
-            return ''.join(ciphertext)
-        else:
+        if key is None:
             print('You must set key to encrypt. ')
+            return None
+
+        ciphertext = []
+        for char in message.upper():
+            if char in self.LETTERS:
+                index = self.LETTERS.find(char)
+                index += key
+                if index >= len(self.LETTERS):
+                    index = index % len(self.LETTERS)
+                ciphertext.append(self.LETTERS[index])
+            else:
+                ciphertext.append(char)
+        return ''.join(ciphertext)
 
     def hack(self):
-        ''' Runs through all possible encrypt(key) possibilities; prints results. '''
-        if len(self.ciphertext) < 1:
+        ''' Prints results of all possible keys. '''
+        if not self.ciphertext:
             raise AttributeError('There is no ciphertext. ')
+        matches = []
+        print('Attempting hack of Caesar cipher...')
+        for key in range(1, len(self.LETTERS)):
+            attempt = self.decrypt(key)
+            if is_language(attempt, english_dict):
+                matches.append(attempt)
+                print('Possible match with key {}:\n{}'.format(
+                    key, self.decrypt(key)))
+        if matches:
+            return matches
         else:
-            possible_match = False
-            print('Attempting hack of Caesar cipher...')
-            for key in range(1, len(self.LETTERS)):
-                attempt = self.decrypt(key)
-                if is_language(attempt, english_dict):
-                    possible_match = True
-                    print('Possible match with key {}:\n{}'.format(key, self.decrypt(key)))
-            if not possible_match: print('Unable to find possible match.')
+            print('Unable to find key.')
+
 
 class Transposition(Cipher):
     ''' Carries encryption and decryption methods for Transposition cipher. '''
