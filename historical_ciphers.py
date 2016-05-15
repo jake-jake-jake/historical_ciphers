@@ -227,10 +227,10 @@ class Affine(Cipher):
     ''' Carries encryption and decryption methods for Affine ciphers, as well as
         a key generator and checker. '''
     CHARS = string.printable
-    
+
     def get_key(self):
-        ''' Checks if a key is present. If not, calls gen_key() and sets self.key equal to result.
-            If so, asks for confirmation first.'''
+        ''' Checks if a key is present. If not, calls gen_key() and sets
+            self.key equal to result. If so, asks for confirmation first.'''
         if self.key:
             print('Key already present: {}. Overwrite? Y/n'.format(self.key))
             key_confirmation = input('> ')
@@ -251,31 +251,30 @@ class Affine(Cipher):
         ''' Splits single key into one multiplication and one additive int.'''
         return divmod(key, len(self.CHARS))
 
-    def encrypt(self, plaintext = None, passed_key = None):
+    def encrypt(self, plaintext=None, passed_key=None):
         ''' Encrypts message attribute for Affine cipher; defaults
-            to self.key, self.message if None passed.
-        '''
+            to self.key, self.message if None passed. '''
         message = plaintext or self.message
         key = passed_key or self.key
-        ciphertext = [] 
+        ciphertext = []
         while key:
             key = self.split_key(key)
             for char in message:
                 if char in self.CHARS:
                     index = self.CHARS.find(char)
-                    ciphertext.append(self.CHARS[(index * key[0] + key[1]) % len(self.CHARS)])
+                    ciphertext.append(self.CHARS[(index * key[0] + key[1]) %
+                                                 len(self.CHARS)])
                 else:
                     ciphertext.append(char)
             return ''.join(ciphertext)
         else:
             print('Cannot encrypt without key.')
 
-    def decrypt(self, ciphertext = None, passed_key = None):
+    def decrypt(self, ciphertext=None, passed_key=None):
         ''' Decrypts message for Affine cipher; defaults to self.key,
-            self.ciphertext if None passed.
-        '''
+            self.ciphertext if None passed. '''
         ciphertext = ciphertext or self.ciphertext
-        key = passed_key or self.key 
+        key = passed_key or self.key
         plaintext = []
         while key:
             key = self.split_key(key)
@@ -283,32 +282,34 @@ class Affine(Cipher):
             for char in ciphertext:
                 if char in self.CHARS:
                     index = self.CHARS.find(char)
-                    plaintext.append(self.CHARS[(index - key[1]) * inverse_key % len(self.CHARS)])
+                    plaintext.append(self.CHARS[(index - key[1]) * 
+                                                inverse_key % len(self.CHARS)])
                 else:
-                    plaintext.append(char)    
+                    plaintext.append(char)
             return ''.join(plaintext)
         else:
             print('Cannot decrypt without key. Set key or use .hack().')
 
     def hack(self):
-        ''' Runs through all possible encrypt(key) possibilities; prints results.'''
+        ''' Runs through all possible encrypt(key) possibilities. Prints
+            results.'''
         print('Attempting to hack Affine cipher. ')
+
         while self.ciphertext:
             possible_match = False
             for key in range(len(self.CHARS) ** 2):
                 key_check = self.split_key(key)
-                # Insert progress if cond. here that prints a percentage complete as
-                # attempt is made; roughly 'if key % (len(self.CHARS) ** 2 / 10 == 0)'
                 if gcd(key_check[0], len(self.CHARS)) != 1:
                     continue
-                attempt = self.decrypt(passed_key = key)
+                attempt = self.decrypt(passed_key=key)
                 if is_language(attempt, english_dict):
                     possible_match = True
                     print('Possible match with key {}:\n{}'.format(key, attempt[:140]))
             if not possible_match:
                 print('Unable to find possible match.')
                 break
-        else: print('There is no ciphertext.')
+        else:
+            print('There is no ciphertext.')
 
 
 class Substitution(Cipher):
