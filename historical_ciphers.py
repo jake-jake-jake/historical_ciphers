@@ -106,9 +106,9 @@ class Caesar(Cipher):
     LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
     def decrypt(self, ciphertext=None, passed_key=None):
-        ''' Decrypts ciphertext. 
+        ''' Decrypts ciphertext.
         Defaults to key and ciphertext attributes if neither is passed.'''
-        
+
         key = passed_key or self.key
         ciphertext = ciphertext or self.ciphertext
         if key is None:
@@ -169,12 +169,12 @@ class Caesar(Cipher):
 
 class Transposition(Cipher):
     ''' Carries encryption and decryption methods for Transposition cipher. '''
-    def encrypt(self, plaintext = None, passed_key = None):
+    def encrypt(self, plaintext=None, passed_key=None):
         ''' Encrypts message attribute for transposition cipher; defaults
             to self.key if None passed. '''
         key = passed_key or self.key
         message = plaintext or self.message
-        while key < (len(message)/2):
+        while key < (len(message) / 2):
             ciphergrid = [''] * key
             for col in range(0, key):
                 index = col
@@ -185,14 +185,13 @@ class Transposition(Cipher):
         else:
             print('Set a key value less than half message length.')
 
-    def decrypt(self, ciphertext = None, passed_key = None):
+    def decrypt(self, ciphertext=None, passed_key=None):
         ''' Decrypts ciphertext attribute for Transposition cipher; defaults
             to self.key if None passed. '''
         key = passed_key or self.key
         ciphertext = ciphertext or self.ciphertext
         while key:
-            # This is a bit counter intuitive; I suggest reading Sweigart's chapter.
-            decrypt_cols = math.ceil(len(ciphertext)/key)
+            decrypt_cols = math.ceil(len(ciphertext) / key)
             decrypt_rows = key
             decrypt_grid = [''] * decrypt_cols
             empty_boxes = decrypt_cols * decrypt_rows - len(ciphertext)
@@ -204,14 +203,15 @@ class Transposition(Cipher):
                 if col == decrypt_cols or (col == decrypt_cols - 1 and row >= decrypt_rows - empty_boxes):
                     row += 1
                     col = 0
-            return ''.join(decrypt_grid)    
+            return ''.join(decrypt_grid)
 
         else:
             print('Cannot decrypt without key. Set key or use .hack().')
 
     def hack(self):
-        ''' Runs through all possible encrypt(key) possibilities; prints results. '''
-        if len(self.ciphertext) < 1:
+        ''' Runs through all possible encrypt(key) possibilities; prints
+        results. '''
+        if not self.ciphertext:
             raise AttributeError('There is no ciphertext. ')
         else:
             for key in range(1, len(self.message)):
@@ -219,7 +219,9 @@ class Transposition(Cipher):
                 if is_language(attempt, english_dict):
                     possible_match = True
                     print('Possible match with key {}:\n{}'.format(key, self.decrypt(key)))
-            if not possible_match: print('Unable to find possible match.')
+            if not possible_match:
+                print('Unable to find possible match.')
+
 
 class Affine(Cipher):
     ''' Carries encryption and decryption methods for Affine ciphers, as well as
