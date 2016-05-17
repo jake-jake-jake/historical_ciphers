@@ -1,7 +1,11 @@
 # Classes for historical, insecure ciphers. Have fun.
 # IRGYYKY LUX NOYZUXOIGR, OTYKIAXK IOVNKXY. NGBK LAT.
 
-import math, string, random
+from itertools import cycle
+
+import math
+import string
+import random
 
 # Functions for multiplicative/Affine cipher.
 # Calculates greatest common denominator; uses Euclid's algorithm. In 3.5
@@ -313,20 +317,21 @@ class Affine(Cipher):
 
 
 class Substitution(Cipher):
-    ''' Contains encrypt, decrypt, and key gen methods for the Substitution cipher.
-        Can work as a poor man's (that is, insecure) one-time pad. There is no hack
-        method for this Cipher class, since hack methods will be indeterminate. '''
+    ''' Contains encrypt, decrypt, and key gen methods for the Substitution
+        cipher. Can work as a poor man's (that is, insecure) one-time pad.
+        There is no hack method for this Cipher class, since hack methods
+        will be indeterminate. '''
     CHARS = string.printable
 
     def gen_key(self):
         ''' Returns a key as string equal to the character set (self.CHARS) of the
             cipher. '''
         key_popper = list(self.CHARS)
-        key_array = [key_popper.pop(random.randint(0, len(key_popper) - 1)) \
+        key_array = [key_popper.pop(random.randint(0, len(key_popper) - 1))
                      for _ in range(len(self.CHARS))]
         return ''.join(key_array)
-        
-    def encrypt(self, plaintext = None, passed_key = None):
+
+    def encrypt(self, plaintext=None, passed_key=None):
         ''' Encrypts using key. If no key set, raises AttributeError. '''
         plaintext = plaintext or self.message
         key = passed_key or self.key
@@ -339,9 +344,9 @@ class Substitution(Cipher):
                     ciphertext.append(char)
             return ''.join(ciphertext)
         else:
-            raise AttributeError('Cannot encrypt without key. Use gen_key method to generate key. ')
+            raise AttributeError('Cannot encrypt without key.')
 
-    def decrypt(self, ciphertext = None, passed_key = None):
+    def decrypt(self, ciphertext=None, passed_key=None):
         ''' Encrypts using key. If no key set, raises AttributeError. '''
         ciphertext = ciphertext or self.ciphertext
         key = passed_key or self.key
@@ -354,31 +359,32 @@ class Substitution(Cipher):
                     plaintext.append(char)
             return ''.join(plaintext)
         else:
-            raise AttributeError('Cannot decripty without key. Use gen_key method to generate key. ')
+            raise AttributeError('Cannot decript without key.')
 
 
 class Vegenere(Cipher):
     ''' Contains encrypt and decrypt methods for the Vegenère cipher. '''
     CHARS = string.printable
-    
-    def encrypt(self, plaintext = None, passed_key = None):
-        ''' Returns ciphertext from plaintext parameter, using instance key and CHAR attributes.'''
+
+    def encrypt(self, plaintext=None, passed_key=None):
+        ''' Returns ciphertext from plaintext parameter.'''
         ct, abc = [], self.CHARS    # ciphertext and alphabet
         key = passed_key or self.key
         plaintext = plaintext or self.message
         if not key:
             raise AttributeError('Key needed to encrypt.')
-        cm = zip(plaintext, cycle(key))   # ciphermatrix
+        cm = zip(plaintext, cycle(key))  # ciphermatrix
         for char, key_char in cm:
             if char in abc:
-                ct.append(abc[(abc.find(char) + abc.find(key_char)) % len(abc)])
+                ct.append(abc[(abc.find(char) + abc.find(key_char))
+                          % len(abc)])
             else:
                 ct.append(char)
         return ''.join(ct)
 
-    def decrypt(self, ciphertext = None, passed_key = None):
-        ''' Returns plaintext from ciphertext parameter, using instance key and CHAR attributes.'''
-        pt, abc = [], self.CHARS   # plaintext and alphabet
+    def decrypt(self, ciphertext=None, passed_key=None):
+        ''' Returns plaintext from ciphertext parameter.'''
+        pt, abc = [], self.CHARS  # plaintext and alphabet
         key = passed_key or self.key
         ciphertext = ciphertext or self.ciphertext
         if not key:
@@ -386,11 +392,13 @@ class Vegenere(Cipher):
         cm = zip(ciphertext, cycle(key))
         for char, key_char in cm:
             if char in abc:
-                pt.append(abc[(abc.find(char) - abc.find(key_char)) % len(abc)])
+                pt.append(abc[(abc.find(char) - abc.find(key_char))
+                          % len(abc)])
             else:
                 pt.append(char)
         return ''.join(pt)
-    
+
+
 # The main loop
 if __name__ == '__main__':
     print('''This library currently encrypts, decrypts, and hacks
