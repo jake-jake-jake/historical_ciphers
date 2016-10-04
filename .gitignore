@@ -91,3 +91,6 @@ ENV/
 
 # Sublime Files
 *.sublime*
+
+# PyPI MANIFEST
+MANIFEST
