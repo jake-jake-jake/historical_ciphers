@@ -1,10 +1,29 @@
-# historical_ciphers
-Python library for encrypting, decrypting, and hacking historical ciphers. At the moment there are classes implemented for Caesar, Transposition, and Affine ciphers. More to come.
+'''
+██╗  ██╗██╗███████╗████████╗ ██████╗ ██████╗ ██╗ ██████╗ █████╗ ██╗        
+██║  ██║██║██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗██║██╔════╝██╔══██╗██║        
+███████║██║███████╗   ██║   ██║   ██║██████╔╝██║██║     ███████║██║        
+██╔══██║██║╚════██║   ██║   ██║   ██║██╔══██╗██║██║     ██╔══██║██║        
+██║  ██║██║███████║   ██║   ╚██████╔╝██║  ██║██║╚██████╗██║  ██║███████╗   
+╚═╝  ╚═╝╚═╝╚══════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝   
+                                                                           
+                         ██████╗██╗██████╗ ██╗  ██╗███████╗██████╗ ███████╗
+                        ██╔════╝██║██╔══██╗██║  ██║██╔════╝██╔══██╗██╔════╝
+                        ██║     ██║██████╔╝███████║█████╗  ██████╔╝███████╗
+                        ██║     ██║██╔═══╝ ██╔══██║██╔══╝  ██╔══██╗╚════██║
+                        ╚██████╗██║██║     ██║  ██║███████╗██║  ██║███████║
+                         ╚═════╝╚═╝╚═╝     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
+                                                                           
+'''
 
-This library draws heavily from Al Sweigart's book [<i>Hacking Secret Ciphers with Python</i>](https://inventwithpython.com/hacking/). 
+# historical_ciphers
+Python library for encrypting, decrypting, and hacking historical ciphers. These are not secure for cryptographic purposes, obviously; they are for education purposes, and of course for the fun and lulz.
+
+Current implementations are done in an object oriented manner. Functional implementations are TK TK TK. 
+
+Credit where credit is due: this library draws heavily from Al Sweigart's book [_Hacking Secret Ciphers with Python_][HSCP]. 
 
 ## Classes
-Each of the classes in this module are (so far) subclasses of the Cipher class, and inherit its __init__ method and base parameters: message, ciphertext, and key. The base class also includes empty .encrypt() and .decryt methods(), but those are present only to allow the inherited __init__ methods of subclasses to automatically encrypt/decrypt a ciphertext/message if a key and a message/ciphertext are provided. So
+Each of the classes in this module are (so far) subclasses of the Cipher class, and inherit its `__init__` method and base parameters: message, ciphertext, and key. The base class also includes empty `.encrypt()` and `.decrypt()` methods, but those are present only to allow the inherited `__init__` methods of subclasses automatically encrypt/decrypt a ciphertext/message if a key and a message/ciphertext are provided. So
 
     a_caesar_cipher = Caesar('This is a secret message', key = 9)
     print(a_caesar_cipher.ciphertext)
@@ -20,4 +39,6 @@ I've started building a comprehensive unit test script, for kicks. It currently 
 In order to expand possible inputs or randomness for tests, I will need to write ways to handle exceptions to the expected input for each attribute. Also on the agenda are tests for the autogeneration of attributes on object instantiation/construction.
 
 ## Future Plans
-I plan to try sending hack attempts to Polyglot, to see if I can get the program to automatically detect language without a dictionary file, and to see how many false positives would result.
+Want to see a curious historic cipher implemented? Let me know.
+
+[HSCP]: https://inventwithpython.com/hacking/
