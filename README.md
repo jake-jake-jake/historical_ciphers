@@ -16,11 +16,11 @@
 ```
 
 # historical_ciphers
-Python library for encrypting, decrypting, and hacking historical ciphers. These are not secure for modern cryptographic purposes, obviously. They are for educational purposes, and of course for the fun and lulz.
+Python package for encrypting, decrypting, and hacking historical ciphers. These are not secure for modern cryptographic purposes, obviously. They are for educational purposes, and of course for the fun and lulz.
 
 Current implementations are done in an object oriented manner. Functional implementations are TK TK TK. 
 
-Credit where credit is due: this library draws heavily from Al Sweigart's book [_Hacking Secret Ciphers with Python_][HSCP]. 
+Credit where credit is due: this package draws heavily from Al Sweigart's book [_Hacking Secret Ciphers with Python_][HSCP]. 
 
 ## Classes
 Each of the classes in this module are (so far) subclasses of the Cipher class, and inherit its `__init__` method and base parameters: message, ciphertext, and key. The base class also includes empty `.encrypt()` and `.decrypt()` methods, but those are present only to allow the inherited `__init__` methods of subclasses automatically encrypt/decrypt a ciphertext/message if a key and a message/ciphertext are provided. So
